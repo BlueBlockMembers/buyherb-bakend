@@ -10,9 +10,21 @@ app.use(express.urlencoded({extended: false}));
 app.use(morgan('dev'));
 dbConnection();
 
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL)
+    res.setHeader("Access-Control-Allow-Methods", 'GET, POST, DELETE')
+    res.setHeader("Access-Control-Allow-Headers", 'Content-Type', "Authorization")
+    res.header("Access-Control-Allow-Credentials", true)
+    next();
+});
+
 app.get('/', async (req, res, next) => {
     res.send({message: 'Awesome it works 🐻'});
 });
+
+app.use('/api/category', require('./routes/category.route'));
+app.use('/api/product', require('./routes/product.route'));
+app.use('/api/order', require('./routes/order.routes'));
 
 app.use((req, res, next) => {
     next(createError.NotFound());
