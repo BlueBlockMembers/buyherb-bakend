@@ -5,11 +5,10 @@ require('dotenv').config();
 const dbConnection = require('./configs/DB');
 
 const app = express();
-dbConnection();
-
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(morgan('dev'));
+dbConnection();
 
 app.get('/', async (req, res, next) => {
   res.send({ message: 'Awesome it works 🐻' });
