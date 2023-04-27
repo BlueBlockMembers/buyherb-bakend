@@ -8,25 +8,36 @@ const app = express();
 dbConnection();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(morgan('dev'));
-
-app.get('/', async (req, res, next) => {
-  res.send({ message: 'Awesome it works 🐻' });
-});
-
-app.use('/api/seller', require('./routes/sellers.route'));
+dbConnection();
 
 app.use((req, res, next) => {
-  next(createError.NotFound());
+    res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL)
+    res.setHeader("Access-Control-Allow-Methods", 'GET, POST, DELETE')
+    res.setHeader("Access-Control-Allow-Headers", 'Content-Type', "Authorization")
+    res.header("Access-Control-Allow-Credentials", true)
+    next();
+});
+
+app.get('/', async (req, res, next) => {
+    res.send({message: 'Awesome it works 🐻'});
+});
+
+app.use('/api/category', require('./routes/category.route'));
+app.use('/api/product', require('./routes/product.route'));
+app.use('/api/order', require('./routes/order.routes'));
+
+app.use((req, res, next) => {
+    next(createError.NotFound());
 });
 
 app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.send({
-    status: err.status || 500,
-    message: err.message,
-  });
+    res.status(err.status || 500);
+    res.send({
+        status: err.status || 500,
+        message: err.message,
+    });
 });
 
 const PORT = process.env.PORT || 3000;

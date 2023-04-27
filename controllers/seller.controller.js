@@ -6,10 +6,13 @@ const addSeller = (req, res) => {
 
     const name = req.body.name;
     const address = req.body.address;
-    const mobile = Number(req.body.mobile);
+    const mobile = req.body.mobile;
     const email = req.body.email;
     const description = req.body.description;
     const image = req.body.image;
+
+
+    console.log(req.body)
 
     //Create an object from Seller model
     const newSeller = new SellerModel({
@@ -33,7 +36,7 @@ const addSeller = (req, res) => {
     })
 }
 
-//Retrieve all selle
+//Retrieve all sellers
 const getAllSeller = (req, res) => {
 
     SellerModel.find().then((sellers) => {
@@ -46,15 +49,16 @@ const getAllSeller = (req, res) => {
     })
 }
 
+//Retrieve one seller
 const getOneSeller = async (req, res) => {
 
     //Fetch the id to the veriable userId
     let userId = req.params.id;
 
-    const user = await SellerModel.findById(userId).then(() => {
+    const user = await SellerModel.findById(userId).then((seller) => {
 
         //If success
-        res.status(200).send({ status: "User fetched", user: user });
+        res.status(200).send({ status: "User fetched", seller});
 
     }).catch(() => {
 
@@ -65,6 +69,7 @@ const getOneSeller = async (req, res) => {
 
 }
 
+//Update seller
 const updateSeller = async (req, res) => {
 
     //Fetch the id to the veriable userId
@@ -88,7 +93,7 @@ const updateSeller = async (req, res) => {
     const update = await SellerModel.findByIdAndUpdate(userId, updateSeller).then(() => {
 
         //Send a response that update success
-        res.status(200).send({ status: "User updated", user: update });
+        res.status(200).send({ status: "User updated" });
 
     }).catch((err) => {
         console.log(err);
@@ -99,6 +104,7 @@ const updateSeller = async (req, res) => {
 
 }
 
+//Delete seller
 const deleteSeller = async (req, res) => {
 
     //Fetch the id to the veriable userId
