@@ -32,6 +32,8 @@ app.use('/api/seller', require('./routes/sellers.route'));
 app.use('/api/category', require('./routes/category.route'));
 app.use('/api/product', require('./routes/product.route'));
 app.use('/api/order', require('./routes/order.route'));
+app.use('/api/users', require('./routes/user.route'));
+
 
 app.use((req, res, next) => {
     next(createError.NotFound());
