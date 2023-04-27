@@ -6,9 +6,14 @@ const dbConnection = require('./configs/DB');
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 dbConnection();
+
+app.get('/', async (req, res, next) => {
+    res.send({ message: 'Awesome it works 🐻' });
+});
+
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_URL)
@@ -19,13 +24,16 @@ app.use((req, res, next) => {
 });
 
 app.get('/', async (req, res, next) => {
-    res.send({message: 'Awesome it works 🐻'});
+    res.send({ message: 'Awesome it works 🐻' });
 });
 
+
+app.use('/api/seller', require('./routes/sellers.route'));
 app.use('/api/category', require('./routes/category.route'));
 app.use('/api/product', require('./routes/product.route'));
-app.use('/api/order', require('./routes/order.routes'));
+app.use('/api/order', require('./routes/order.route'));
 app.use('/api/users', require('./routes/user.route'));
+
 
 app.use((req, res, next) => {
     next(createError.NotFound());
