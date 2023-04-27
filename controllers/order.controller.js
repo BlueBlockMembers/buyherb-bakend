@@ -1,6 +1,15 @@
 const { Order } = require("../models/order.model");
 const { OrderItem } = require("../models/orderItem.model");
+const getAllOrders = async (req, res) => {
+  const orderList = await Order.find()
+    .populate("user", "name")
+    .sort({ dateOrdered: -1 });
 
+  if (!orderList) {
+    res.status(500).json({ success: false });
+  }
+  res.send(orderList);
+};
 const getOrderById = async (req, res) => {
   const order = await Order.findById(req.params.id)
     .populate("user", "name")
@@ -63,7 +72,19 @@ const createOrder = async (req, res) => {
 
   res.send(order);
 };
+const updateOrder = async (req, res) => {
+  const order = await Order.findByIdAndUpdate(
+    req.params.id,
+    {
+      status: req.body.status,
+    },
+    { new: true }
+  );
 
+  if (!order) return res.status(400).send("the order cannot be update!");
+
+  res.send(order);
+};
 const deleteOrder = (req, res) => {
   Order.findByIdAndRemove(req.params.id)
     .then(async (order) => {
