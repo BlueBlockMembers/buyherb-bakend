@@ -8,3 +8,6 @@ router.post('/paypal/checkout', checkoutPaypal);
 
 // Route to handle successful completion of a PayPal checkout
 router.get('/paypal/checkout/success', successPaypal);
+
+
+module.exports = router;

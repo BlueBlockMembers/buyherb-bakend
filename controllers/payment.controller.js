@@ -20,6 +20,7 @@ const getToken = (req, res) => {
 };
 
 const checkoutPaypal = (req, res) => {
+    console.log("checkout func")
     const payment = {
         intent: 'sale',
         payer: {
