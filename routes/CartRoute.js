@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Cart = require('../models/Cart');
 
-// Create a new cart
+// new cart
 router.post('/create', async (req, res) => {
   try {
     const cart = new Cart({
+      customer: req.body.customer,
       items: req.body.items,
       total: req.body.total
     });
@@ -16,7 +17,7 @@ router.post('/create', async (req, res) => {
   }
 });
 
-// Get all carts
+// all cart
 router.get('/', async (req, res) => {
   try {
     const carts = await Cart.find();
@@ -26,12 +27,11 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get a specific cart
+// get cart by id
 router.get('/:id', getCart, (req, res) => {
   res.json(res.cart);
 });
 
-// Update a specific cart
 router.patch('/:id', getCart, async (req, res) => {
   if (req.body.items != null) {
     res.cart.items = req.body.items;
@@ -47,7 +47,6 @@ router.patch('/:id', getCart, async (req, res) => {
   }
 });
 
-// Delete a specific cart
 router.delete('/:id', getCart, async (req, res) => {
   try {
     await res.cart.remove();
@@ -57,7 +56,23 @@ router.delete('/:id', getCart, async (req, res) => {
   }
 });
 
-// Middleware function to get a specific cart by ID
+
+router.get('/user/:id', async (req, res) => {
+  try {
+    const userId = req.params.id; 
+    const cart = await Cart.findOne({ customer: userId }); // Use id to find the cart
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+    res.json(cart);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
+
 async function getCart(req, res, next) {
   let cart;
   try {
