@@ -57,6 +57,7 @@ exports.successfulCheckout = (req, res) => {
     });
 };
 
+
 // Controller function to handle the cancellation of a PayPal checkout
 exports.cancelCheckout = (req, res) => {
     console.log('Payment cancelled.');
